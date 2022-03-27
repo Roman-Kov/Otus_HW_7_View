@@ -16,9 +16,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val data = dataProvider.getExpenses()
         val pieChart = findViewById<PieChartView>(R.id.pieChart)
-        pieChart.drawChart(
-            dataToPieChartData(data)
-        )
+        pieChart.apply {
+            drawChart(dataToPieChartData(data))
+        }
     }
 
     private fun dataToPieChartData(expenses: List<Expense>): List<Pair<Float, Int>> {
