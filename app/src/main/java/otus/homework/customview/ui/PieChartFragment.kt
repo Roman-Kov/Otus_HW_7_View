@@ -32,7 +32,7 @@ class PieChartFragment : Fragment() {
         pieChart?.apply {
             drawChart(dataToPieChartData(data))
             setOnClickListener { category ->
-
+                (activity as MainActivity).navigator.navigateToBarChart(category)
             }
         }
     }

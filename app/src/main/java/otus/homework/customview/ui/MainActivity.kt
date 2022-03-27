@@ -24,5 +24,13 @@ class MainActivity : AppCompatActivity() {
                 commit()
             }
         }
+
+        fun navigateToBarChart(category: String) {
+            val barChartFragment = BarChartFragment.createInstance(category)
+            supportFragmentManager.beginTransaction().apply {
+                replace(R.id.fragmentContainer, barChartFragment)
+                commit()
+            }
+        }
     }
 }
