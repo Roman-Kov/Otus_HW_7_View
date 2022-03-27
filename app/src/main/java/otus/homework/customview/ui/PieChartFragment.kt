@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import otus.homework.customview.R
 import otus.homework.customview.data.Expense
+import otus.homework.customview.data.PieChartParam
 import kotlin.random.Random
 
 class PieChartFragment : Fragment() {
@@ -30,17 +31,30 @@ class PieChartFragment : Fragment() {
         val pieChart = view?.findViewById<PieChartView>(R.id.pieChart)
         pieChart?.apply {
             drawChart(dataToPieChartData(data))
+            setOnClickListener { category ->
+
+            }
         }
     }
 
-    private fun dataToPieChartData(expenses: List<Expense>): List<Pair<Float, Int>> {
-        val amounts = expenses.map { it.amount }
-        val sum = amounts.sum()
+    private fun dataToPieChartData(expenses: List<Expense>): List<PieChartParam> {
+        val amountsByCategory = expenses.groupBy {
+            it.category
+        }.map {
+            Pair(
+                it.key,
+                it.value.sumOf {
+                    it.amount
+                }
+            )
+        }
+        val sum = amountsByCategory.sumOf { it.second }
         if (sum == 0) return listOf()
         val valueInDegree: Float = sum.toFloat() / 360
-        return amounts.map { amount ->
-            Pair(
-                (amount / valueInDegree),
+        return amountsByCategory.map {
+            PieChartParam(
+                it.first,
+                (it.second / valueInDegree),
                 getRandomColor()
             )
         }

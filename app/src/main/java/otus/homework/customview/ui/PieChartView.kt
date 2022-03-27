@@ -11,6 +11,7 @@ import android.view.MotionEvent
 import android.view.MotionEvent.ACTION_DOWN
 import android.view.MotionEvent.ACTION_UP
 import android.view.View
+import otus.homework.customview.data.PieChartParam
 import kotlin.math.atan
 import kotlin.math.pow
 
@@ -36,9 +37,10 @@ class PieChartView @JvmOverloads constructor(
     }
     private var startAngle = 0f
     private var endAngle = 0f
-    private var params: List<Pair<Float, Int>>? = null
+    private var params: List<PieChartParam>? = null
     private var _x: Float = UNDEFINED
     private var _y: Float = UNDEFINED
+    private var onClickListener: ((String) -> Unit)? = null
 
     init {
         paint.style = Paint.Style.FILL
@@ -61,9 +63,12 @@ class PieChartView @JvmOverloads constructor(
         if (params == null) return
         val touchInCircle = touchPointInCircle()
         params?.forEach { params ->
-            endAngle = params.first
-            if (touchInCircle && touchPointInCurrentCircleSector()) paint.color = Color.RED
-            else paint.color = params.second
+            endAngle = params.weight
+            if (touchInCircle && touchPointInCurrentCircleSector()) {
+                paint.color = Color.RED
+                onClickListener?.let { it(params.category) }
+            }
+            else paint.color = params.color
             canvas.drawArc(borderRect, startAngle, endAngle, true, paint)
             startAngle += endAngle
         }
@@ -101,7 +106,7 @@ class PieChartView @JvmOverloads constructor(
         val additionalAngle = when {
             _x >= centerX && _y >= centerY -> 0
             _x <= centerX && _y >= centerY -> 180
-            _x <= centerX && _y <= centerY -> 270
+            _x <= centerX && _y <= centerY -> 180
             _x >= centerX && _y <= centerY -> 360
             else -> 0
         }
@@ -109,9 +114,13 @@ class PieChartView @JvmOverloads constructor(
         return angle in startAngle..startAngle + endAngle
     }
 
-    fun drawChart(params: List<Pair<Float, Int>>) {
+    fun drawChart(params: List<PieChartParam>) {
         this.params = params
         invalidate()
+    }
+
+    fun setOnClickListener(listener: (String) -> Unit) {
+        onClickListener = listener
     }
 
     companion object {
