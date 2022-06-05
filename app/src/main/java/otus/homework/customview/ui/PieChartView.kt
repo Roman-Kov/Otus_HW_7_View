@@ -47,8 +47,6 @@ class PieChartView @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        //val widthMode = MeasureSpec.getMode(widthMeasureSpec)
-        //val heightMode = MeasureSpec.getMode(heightMeasureSpec)
         val parentWidthSize = MeasureSpec.getSize(widthMeasureSpec)
         val parentHeightSize = MeasureSpec.getSize(heightMeasureSpec)
         val size = parentWidthSize.coerceAtMost(parentHeightSize)

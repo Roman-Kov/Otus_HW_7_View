@@ -8,6 +8,8 @@ import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import otus.homework.customview.R
+import otus.homework.customview.data.BarChartParam
+import otus.homework.customview.util.getRandomColor
 
 class BarChartFragment : Fragment() {
 
@@ -22,13 +24,33 @@ class BarChartFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        showTitle()
+        getCategory { category ->
+            showTitle(category)
+            drawChart(category)
+        }
     }
 
-    private fun showTitle() {
+    private fun getCategory(onSuccess: (category: String) -> Unit) {
+        arguments?.getString(CATEGORY)?.let {
+            onSuccess(it)
+        }
+    }
 
+    private fun showTitle(name: String) {
         view?.findViewById<TextView>(R.id.title)?.apply {
-            text = arguments?.getString(CATEGORY).orEmpty()
+            text = name
+        }
+    }
+
+    private fun drawChart(categoryName: String) {
+
+        val data = (activity as? MainActivity)?.let { mainActivity ->
+            mainActivity.dataProvider.getExpenses(categoryName).sortedBy { it.time }
+        }?.map { BarChartParam(it.time, it.amount.toFloat(), getRandomColor()) } ?: listOf()
+
+        val barChart = view?.findViewById<BarChartView>(R.id.barChart)
+        barChart?.apply {
+            drawChart(data)
         }
     }
 

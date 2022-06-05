@@ -1,6 +1,5 @@
 package otus.homework.customview.ui
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +8,7 @@ import androidx.fragment.app.Fragment
 import otus.homework.customview.R
 import otus.homework.customview.data.Expense
 import otus.homework.customview.data.PieChartParam
-import kotlin.random.Random
+import otus.homework.customview.util.getRandomColor
 
 class PieChartFragment : Fragment() {
 
@@ -58,9 +57,5 @@ class PieChartFragment : Fragment() {
                 getRandomColor()
             )
         }
-    }
-
-    private fun getRandomColor(): Int {
-        return Color.argb(255, Random.nextInt(0, 256), Random.nextInt(0, 256), Random.nextInt(0, 256))
     }
 }

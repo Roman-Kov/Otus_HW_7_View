@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
             val barChartFragment = BarChartFragment.createInstance(category)
             supportFragmentManager.beginTransaction().apply {
                 replace(R.id.fragmentContainer, barChartFragment)
+                addToBackStack("Main")
                 commit()
             }
         }
