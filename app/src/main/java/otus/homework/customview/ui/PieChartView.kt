@@ -12,6 +12,7 @@ import android.view.MotionEvent.ACTION_DOWN
 import android.view.MotionEvent.ACTION_UP
 import android.view.View
 import otus.homework.customview.data.PieChartParam
+import java.lang.Integer.min
 import kotlin.math.atan
 import kotlin.math.pow
 
@@ -47,9 +48,21 @@ class PieChartView @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val parentWidthSize = MeasureSpec.getSize(widthMeasureSpec)
-        val parentHeightSize = MeasureSpec.getSize(heightMeasureSpec)
-        val size = parentWidthSize.coerceAtMost(parentHeightSize)
+        val widthMode = MeasureSpec.getMode(widthMeasureSpec)
+        val heightMode = MeasureSpec.getMode(heightMeasureSpec)
+        val widthSize = MeasureSpec.getSize(widthMeasureSpec)
+        val heightSize = MeasureSpec.getSize(heightMeasureSpec)
+        val size: Int = when {
+            widthMode == MeasureSpec.EXACTLY || heightMode == MeasureSpec.EXACTLY -> {
+                val exactlyWidth = widthSize.takeIf { widthMode == MeasureSpec.EXACTLY } ?: Int.MAX_VALUE
+                val exactlyHeight = heightSize.takeIf { heightMode == MeasureSpec.EXACTLY } ?: Int.MAX_VALUE
+                min(exactlyWidth, exactlyHeight)
+            }
+            widthMode == MeasureSpec.UNSPECIFIED || heightMode == MeasureSpec.UNSPECIFIED -> 1000
+            widthMode == MeasureSpec.AT_MOST || heightMode == MeasureSpec.AT_MOST -> 500
+            else -> 500
+        }
+
         radius = size / 2f
         centerX = radius
         centerY = radius
