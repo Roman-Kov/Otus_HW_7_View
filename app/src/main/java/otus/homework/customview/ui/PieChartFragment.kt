@@ -1,9 +1,11 @@
 package otus.homework.customview.ui
 
+import android.graphics.Interpolator
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.OvershootInterpolator
 import androidx.fragment.app.Fragment
 import otus.homework.customview.R
 import otus.homework.customview.data.Expense
@@ -31,7 +33,14 @@ class PieChartFragment : Fragment() {
         pieChart?.apply {
             drawChart(dataToPieChartData(data))
             setOnClickListener { category ->
-                (activity as MainActivity).navigator.navigateToBarChart(category)
+                animate()
+                    .setDuration(1000)
+                    .rotation(360f)
+                    .setInterpolator(OvershootInterpolator())
+                    .withEndAction {
+                        (activity as MainActivity).navigator.navigateToBarChart(category)
+                    }
+                    .start()
             }
         }
     }
