@@ -1,6 +1,5 @@
 package otus.homework.customview.ui
 
-import android.graphics.Interpolator
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
